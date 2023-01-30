@@ -1,6 +1,7 @@
 let a = "";
 let b = "";
 let sign = "";
+let proc = false;
 let negA = false;
 let negB = false;
 let finish = false;
@@ -78,8 +79,32 @@ document.querySelector(".buttons").onclick = (event) => {
   }
 
   if (key === "%") {
-    // console.log(a, b, sign);
-    // return;
+    if (a === "" && b === "" && sign === "") {
+      out.textContent = "Ошибка";
+      a = "";
+      b = "";
+      sign = "";
+      proc = false;
+      return;
+    }
+    if (a !== "" && b === "" && sign === "") {
+      out.textContent = a + "%";
+      proc = true;
+    }
+    if (a !== "" && b === "" && sign !== "") {
+      out.textContent = "Ошибка";
+      a = "";
+      b = "";
+      sign = "";
+      proc = false;
+      return;
+    }
+    if (a !== "" && b !== "" && sign !== "") {
+      out.textContent = b + "%";
+      b = (a * b) / 100;
+      console.log(a, b, sign);
+      proc = false;
+    }
   }
 
   if (action.includes(key)) {
@@ -91,6 +116,7 @@ document.querySelector(".buttons").onclick = (event) => {
 
   if (key === "=") {
     if (b === "") b = a;
+    if (proc) a = a / 100;
     switch (sign) {
       case "+":
         a = +a + +b;
@@ -113,6 +139,7 @@ document.querySelector(".buttons").onclick = (event) => {
         break;
     }
     finish = true;
+    proc = false;
     negA = a < 0 ? true : false;
     out.textContent = a;
     console.log(a, b, sign);
